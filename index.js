@@ -35,13 +35,13 @@ app.get('/listkamar',(req,res) => {
 
 //filter berdasarkan kategory
 app.get('/kategorikamar/:jenis',(req,res) => {
-    var kategori = req.body;
+    var kategori = req.params.jenis;
     var sql = `select
     tk.nomorKamar as kamar,
     tc.namacategory as jenis,
     tk.harga as price
     from tablekamar tk join tablecategory tc on tk.categoryid = tc.id
-    having jenis like '${req.body}'`
+    having jenis like '${req.params.jenis}'`
     conn.query(sql,kategori,(err,result) => {
         res.send(result)
         console.log(result)
@@ -100,17 +100,17 @@ app.post('/deletekategori/:id',(req,res) => {
 })
 
 //login user
-app.get('/login',(req,res) => {
+app.post('/login',(req,res) => {
     var data = req.body;
     var sql = `select * from tableuser tb
      where tb.username = '${req.body.username}' and tb.password = '${req.body.password}';`;
-    conn.query(sql,data,(err,result) => {
+    conn.query(sql,(err,result) => {
         res.send('welcome' + result)
     })
 })
 
 //register
-app.get('/register',(req,res) => {
+app.post('/register',(req,res) => {
     var data = req.body;
     var sql = `insert into tableuser set ?`;
     conn.query(sql,data,(err,result) => {
